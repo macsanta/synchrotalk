@@ -20,14 +20,20 @@ class event extends api
     }
   }
 
-  protected function get_events($target=null, $target_group=null)
+  protected function get_events($target_group=null)
   {
-    if($target && $target_group){
+    if($target_group){
+      session_start();
       $sql = "SELECT * FROM events WHERE target=:target AND target_group=:target_group";
-      $sql_params = ['target' => $target, ':target_group' => $target_group];
-      $res = db::Query($sql, $sql_params);
+      $sql_params = [':target' => $_SESSION['username'], ':target_group' => $target_group];
+      $events = db::Query($sql, $sql_params);
+      foreach ($events as $event) {
+        $event['data'] = json_decode($event['data'], true);
+        $res[] = $event;
+      }
       return $res;
     }
+    error_log('Missed Target Group!');
     return false;
   }
 

@@ -20,6 +20,7 @@ class thread extends api
         'username' => $_SESSION['username'],
         't_id' => $t_id,
       ],
+      'script' => '/js/thread.js',
     ];
   }
 

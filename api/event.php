@@ -5,10 +5,6 @@ class event extends api
   protected function Reserve()
   {
 
-    return
-    [
-      'design' => 'main/body',
-    ];
   }
 
   protected function add_event($target=null, $data=null, $target_group=null)
@@ -22,6 +18,17 @@ class event extends api
       ];
       db::Query($sql, $sql_params);
     }
+  }
+
+  protected function get_events($target=null, $target_group=null)
+  {
+    if($target && $target_group){
+      $sql = "SELECT * FROM events WHERE target=:target AND target_group=:target_group";
+      $sql_params = ['target' => $target, ':target_group' => $target_group];
+      $res = db::Query($sql, $sql_params);
+      return $res;
+    }
+    return false;
   }
 
 }

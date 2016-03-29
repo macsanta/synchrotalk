@@ -15,20 +15,9 @@ __this.Defer(function(){
   __this.first().find('button').click(function(){
     var message = __this.first().find('input').val();
       if(message!==""){
-        phoxy.ApiRequest(['thread/add_message', __this.t_id, __this.username, message], function()
+        phoxy.ApiRequest(['thread/add_message', __this.t_id, __this.username, message, __this.members], function()
         {
           __this.first().find('input').val('');
-          //send event
-          var event_data = {thread_id:__this.t_id,message:message, message_from:__this.username};
-          for(m in __this.members)
-          {
-            phoxy.ApiRequest(['event/add_event', __this.members[m].username, event_data, 'thread'], function()
-            {
-
-            });
-          }
-
-
         });
       }
   });

@@ -37,7 +37,7 @@ class thread extends api
     return $res;
   }
 
-  protected function add_message($t_id, $username, $message)
+  protected function add_message($t_id, $username, $message, $members)
   {
     if($message!=="")
     {
@@ -47,6 +47,19 @@ class thread extends api
         ':message' => $message,
       ];
       $res = db::Query("INSERT INTO thread_messages (thread_id, username, message) VALUES (:t_id, :username, :message)", $s_params);
+      //send event
+      $this->pack_message($t_id, $members, $message, $username);
+    }
+  }
+
+  protected function pack_message($t_id, $members, $message, $username)
+  {
+    $event_data = [
+      'thread_id' => $t_id, 'message' => $message, 'from' => $username
+    ];
+
+    foreach ($members as $member) {
+      phoxy::Load('event')->add_event($member->username, $event_data, 'thread');
     }
   }
 

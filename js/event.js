@@ -19,5 +19,8 @@ get_events = function(target_group)
 }
 
 setInterval(function(){
-  get_events('thread');
+  for(a in window.EventModules){
+    o_module = window.EventModules[a].name;
+    get_events(o_module);
+  }
 }, 1000);

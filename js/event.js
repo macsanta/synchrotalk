@@ -6,13 +6,18 @@ get_events = function(target_group)
   {
     for(n in r.data.events){
       var event = r.data.events[n];
+      var user = r.data.user;
       var module = event.target_group;
       if(!window.EventModules[module]){
         console.log('Module '+module+' not found!');
       }else{
-        window.EventModules[module].getEvent(event);
+        window.EventModules[module].getEvent(event, user);
       }
     }
   });
 
 }
+
+setInterval(function(){
+  get_events('thread');
+}, 1000);

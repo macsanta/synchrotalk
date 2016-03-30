@@ -37,6 +37,7 @@ class event extends api
     return [
       'data' => [
         'events' => $events,
+        'user' => $_SESSION['username'],
       ],
     ];
   }

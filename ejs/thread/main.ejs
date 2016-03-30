@@ -12,10 +12,9 @@
     }
     //messages from event
     thread.ejsThread.onEvent = function(message, first){
-      console.log(message);
-      var old_divs = first.find('.messages').html();
       var new_divs = phoxy.DeferRender('thread/messages', message);
-      first.find('.message').html(old_divs+new_divs);
+      first.find('.messages').append(new_divs);
+      first.find('.messages').scrollTop(50000);
     }
   %>
   </div>

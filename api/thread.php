@@ -49,14 +49,18 @@ class thread extends api
       ];
       $res = db::Query("INSERT INTO thread_messages (thread_id, username, message) VALUES (:t_id, :username, :message)", $s_params);
       //send event
-      $this->pack_message($t_id, $members, $message, $username);
+      $lastInsertId = db::lastInsertId();
+      $this->pack_message($t_id, $members, $message, $username, $lastInsertId);
     }
   }
 
-  protected function pack_message($t_id, $members, $message, $username)
+  protected function pack_message($t_id, $members, $message, $username, $lastInsertId)
   {
     $event_data = [
-      'thread_id' => $t_id, 'message' => $message, 'from' => $username
+      'thread_id' => $t_id,
+      'messsage_id' => $lastInsertId,
+      'message' => $message,
+      'username' => $username,
     ];
 
     foreach ($members as $member) {

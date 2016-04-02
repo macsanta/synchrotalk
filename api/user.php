@@ -32,10 +32,12 @@ class user extends api
 
   protected function GetUserName()
   {
+    if (session_status() !== PHP_SESSION_ACTIVE)
+      session_start();
+      
     if(isset($_SESSION['username'])){
       return $_SESSION['username'];
     }
-
     return false;
   }
 

@@ -10,5 +10,18 @@ websocket.onopen = function(ev) {
     var user_data = {'type':'login', 'username':r.data.GetUserName};
     websocket.send(JSON.stringify(user_data));
   });
+}
+
+websocket.onmessage = function(ev) {
+	console.log(ev);
+  var events = JSON.parse(ev.data);
+  if(events.type=="event")
+  {
+    var data = events.data;
+    for(n in data)
+    {
+      console.log(data[n]);
+    }
+  }
 
 }

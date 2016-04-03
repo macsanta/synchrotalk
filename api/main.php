@@ -9,6 +9,7 @@ class main extends api
     [
       'design' => 'main/body',
       'script' => '/js/message.js',
+      'script' => '/js/event.js',
     ];
   }
 

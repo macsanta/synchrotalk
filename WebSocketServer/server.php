@@ -54,6 +54,11 @@ while (true) {
 			$received_text = unmask($buf); //unmask data
 			$tst_msg = json_decode($received_text); //json decode
 
+			if($tst_msg->type=='login' && $tst_msg->username!==''){
+				$users[$tst_msg->username]['res_id'] = $changed_socket;
+				$users[$tst_msg->username]['last_id'] = 0;
+			}
+
 			break 2; //exist this loop
 		}
 

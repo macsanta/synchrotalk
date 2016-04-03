@@ -1,6 +1,7 @@
 <?php
 $host = 'localhost'; //host
 $port = '3000'; //port
+$host_url = 'synchrotalk.com';
 $null = NULL; //null var
 set_time_limit(0);
 //Create TCP/IP sream socket
@@ -75,12 +76,51 @@ while (true) {
 		}
 	}
 
+	if(!empty($users))
+	{
+		foreach ($users as $u_key => $user){
+			$new_events = get_events($u_key, $user['last_id']);
+			var_dump($new_events);
+			if($new_events){
+				$data['type'] = 'event';
+				$data['data'] = $new_events;
+				send_mess($user['res_id'], $data);
+				$users[$u_key]['last_id'] = end($new_events)->id;
+			}
+			sleep(1);
+		}
+	}
+
 }
 
 // close the listening socket
 
 socket_close($socket);
 
+function get_events($target, $last_id)
+{
+	global $host_url;
+	$url = $host_url.'/api/event/get_events("'.$target.'",'.$last_id.')';
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	// Set so curl_exec returns the result instead of outputting it.
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	// Get the response and close the channel.
+	$response = curl_exec($ch);
+	curl_close($ch);
+
+	$data = json_decode($response);
+	return $data->data->events;
+
+}
+
+function send_mess($user, $msg)
+{
+	$event = mask(json_encode($msg));
+	socket_write($user,$event,strlen($event));
+	return true;
+}
 
 function send_message($msg)
 {

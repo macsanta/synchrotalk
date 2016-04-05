@@ -10,7 +10,15 @@ class event extends api
 
   private function auth($auth_key)
   {
-    if($auth_key!==null && $auth_key=='25a5858ad47ece3efc83ad58aa12ff79')
+    if (session_status() !== PHP_SESSION_ACTIVE)
+      session_start();
+
+    if(!isset($_SESSION['web_socket_key'])){
+      $key_res = db::Query('SELECT `value` FROM config WHERE name = :name',[':name' => 'web_socket_key']);
+      $_SESSION['web_socket_key'] = $key_res[0]->value;
+    }
+
+    if($auth_key!==null && $auth_key==$_SESSION['web_socket_key'])
       return true;
     else
       return false;
@@ -26,7 +34,10 @@ class event extends api
       error_log('Missed Target Group!');
       return false;
     }
-    session_start();
+
+    if (session_status() !== PHP_SESSION_ACTIVE)
+      session_start();
+
     $sql = "SELECT * FROM events WHERE target=:target AND id > :last_id";
     $sql_params = [':target' => $target, ':last_id' => $last_id];
     $events = db::Query($sql, $sql_params);

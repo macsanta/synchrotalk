@@ -8,19 +8,17 @@ class event extends api
       return false;
   }
 
-  private function auth()
+  private function auth($auth_key)
   {
-    if (session_status() !== PHP_SESSION_ACTIVE)
-      session_start();
-    if(isset($_SESSION['websocket_server_key']) && $_SESSION['websocket_server_key']=='25a5858ad47ece3efc83ad58aa12ff79')
+    if($auth_key!==null && $auth_key=='25a5858ad47ece3efc83ad58aa12ff79')
       return true;
     else
       return false;
   }
 
-  protected function get_events($target=null, $last_id=null)
+  protected function get_events($target=null, $last_id=null, $auth_key=null)
   {
-    if(!$this->auth())
+    if(!$this->auth($auth_key))
       return false;
 
     if(!$target)

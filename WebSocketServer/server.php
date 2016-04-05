@@ -4,8 +4,8 @@ $port = '3000'; //port
 $host_url = 'synchrotalk.com';
 $null = NULL; //null var
 
-session_start();
-$_SESSION['websocket_server_key'] = '25a5858ad47ece3efc83ad58aa12ff79';
+$auth_key = '25a5858ad47ece3efc83ad58aa12ff79';
+
 
 set_time_limit(0);
 //Create TCP/IP sream socket
@@ -102,8 +102,8 @@ socket_close($socket);
 
 function get_events($target, $last_id)
 {
-	global $host_url;
-	$url = $host_url.'/api/event/get_events("'.$target.'",'.$last_id.')';
+	global $host_url, $auth_key;
+	$url = $host_url.'/api/event/get_events("'.$target.'",'.$last_id.',"'.$auth_key.'")';
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);

@@ -10,31 +10,12 @@ class event extends api
 
   private function auth()
   {
-    if($this->get_client_ip()==$_SERVER['SERVER_ADDR'])
+    if (session_status() !== PHP_SESSION_ACTIVE)
+      session_start();
+    if(isset($_SESSION['websocket_server_key']) && $_SESSION['websocket_server_key']=='25a5858ad47ece3efc83ad58aa12ff79')
       return true;
     else
       return false;
-  }
-
-  private function get_client_ip()
-  {
-    $ipaddress = '';
-    if (isset($_SERVER['HTTP_CLIENT_IP']))
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    else if(isset($_SERVER['HTTP_X_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    else if(isset($_SERVER['HTTP_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    else if(isset($_SERVER['REMOTE_ADDR']))
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
-    else
-        $ipaddress = 'UNKNOWN';
-
-    return $ipaddress;
   }
 
   protected function get_events($target=null, $last_id=null)

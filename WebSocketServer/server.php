@@ -3,6 +3,10 @@ $host = 'localhost'; //host
 $port = '3000'; //port
 $host_url = 'synchrotalk.com';
 $null = NULL; //null var
+
+session_start();
+$_SESSION['websocket_server_key'] = '25a5858ad47ece3efc83ad58aa12ff79';
+
 set_time_limit(0);
 //Create TCP/IP sream socket
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -80,7 +84,6 @@ while (true) {
 	{
 		foreach ($users as $u_key => $user){
 			$new_events = get_events($u_key, $user['last_id']);
-			var_dump($new_events);
 			if($new_events){
 				$data['type'] = 'event';
 				$data['data'] = $new_events;
@@ -111,7 +114,10 @@ function get_events($target, $last_id)
 	curl_close($ch);
 
 	$data = json_decode($response);
-	return $data->data->events;
+	if(isset($data->data->events))
+		return $data->data->events;
+	else
+		return false;
 
 }
 
